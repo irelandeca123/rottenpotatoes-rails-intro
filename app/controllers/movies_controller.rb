@@ -11,10 +11,14 @@ class MoviesController < ApplicationController
   end
 
   def index
+    #Added sorting list to store in a session 
     @sort = params[:sort]||session[:sort]
+    #Sets all ratings (G, PG, PG-13 ..etc) equal to Movie.Ratings
     @all_ratings = Movie.ratings
+    #Hashes ratings and orders ratings (Sorting)
     @ratings =  params[:ratings] || session[:ratings] || Hash[@all_ratings.map {|rating| [rating, rating]}]
     @movies = Movie.where(rating:@ratings.keys).order(@sort)
+    #If statememnt in order to store each option (save) so if the user enters a certain rating it sorts it and saves it to session.
     if params[:sort]!=session[:sort] or params[:ratings]!=session[:ratings]
       session[:sort] = @sort
       session[:ratings] = @ratings
